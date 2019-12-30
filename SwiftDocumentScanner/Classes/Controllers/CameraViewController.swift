@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public protocol CameraViewControllerDelegate: class {
-// 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
+
     func cameraViewController(didFocus point: CGPoint)
     func cameraViewController(update status: AVAuthorizationStatus)
     func cameraViewController(captured image: UIImage)
@@ -37,7 +37,7 @@ open class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampl
     private(set) var session: AVCaptureSession = AVCaptureSession()
     private(set) var previewLayer: AVCaptureVideoPreviewLayer?
 
-    private var captureDevice: AVCaptureDevice?
+    public var captureDevice: AVCaptureDevice?
     private var captureDeviceInput: AVCaptureDeviceInput?
     private var capturePhotoOutput: AVCapturePhotoOutput?
     private var captureVideoOutput: AVCaptureVideoDataOutput?
@@ -59,12 +59,12 @@ open class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampl
             configureSession()
             cameraDelegate?.cameraViewController(update: status)
         case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { [unowned self] granted in
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
                 let newStatus = AVCaptureDevice.authorizationStatus(for: .video)
                 if granted {
-                    self.configureSession()
+                    self?.configureSession()
                 }
-                self.cameraDelegate?.cameraViewController(update: newStatus)
+                self?.cameraDelegate?.cameraViewController(update: newStatus)
             }
         default:
             cameraDelegate?.cameraViewController(update: status)
@@ -74,8 +74,8 @@ open class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampl
     open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
-        queue.async {
-            guard self.session.isRunning else { return }
+        queue.async { [weak self] in
+            guard let self = self, self.session.isRunning else { return }
             self.session.stopRunning()
         }
     }
@@ -83,8 +83,8 @@ open class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampl
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        queue.async {
-            guard !self.session.isRunning else { return }
+        queue.async { [weak self] in
+            guard let self = self, !self.session.isRunning else { return }
             self.session.startRunning()
         }
     }
@@ -147,45 +147,8 @@ open class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampl
 
     public func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     }
-
-}
-
-extension CameraViewController {
-
-    private func reconfigureSession() {
-        queue.async {
-            let inputs = self.session.inputs
-            inputs.forEach { self.session.removeInput($0) }
-
-            self.captureDevice = nil
-            self.captureDeviceInput = nil
-
-            self.configureCaptureDevice()
-            self.configureCaptureDeviceInput()
-        }
-    }
-
-    private func configureSession() {
-        queue.async {
-            self.session.beginConfiguration()
-
-            if self.session.canSetSessionPreset(self.preset) {
-                self.session.sessionPreset = self.preset
-            } else {
-                self.session.sessionPreset = .high
-            }
-
-            self.configureCaptureDevice()
-            self.configureCaptureDeviceInput()
-            self.configureCapturePhotoOutput()
-            self.configureCaptureVideoOutput()
-
-            self.session.commitConfiguration()
-            self.session.startRunning()
-        }
-    }
-
-    private func configureCaptureDevice() {
+    
+    open func configureCaptureDevice() {
         let device = captureDevice(for: cameraPosition)
         guard let captureDevice = device else { return }
 
@@ -218,6 +181,44 @@ extension CameraViewController {
         }
 
         self.captureDevice = captureDevice
+    }
+}
+
+extension CameraViewController {
+
+    private func reconfigureSession() {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            let inputs = self.session.inputs
+            inputs.forEach { self.session.removeInput($0) }
+
+            self.captureDevice = nil
+            self.captureDeviceInput = nil
+
+            self.configureCaptureDevice()
+            self.configureCaptureDeviceInput()
+        }
+    }
+
+    private func configureSession() {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            self.session.beginConfiguration()
+
+            if self.session.canSetSessionPreset(self.preset) {
+                self.session.sessionPreset = self.preset
+            } else {
+                self.session.sessionPreset = .high
+            }
+
+            self.configureCaptureDevice()
+            self.configureCaptureDeviceInput()
+            self.configureCapturePhotoOutput()
+            self.configureCaptureVideoOutput()
+
+            self.session.commitConfiguration()
+            self.session.startRunning()
+        }
     }
 
     private func configureCaptureDeviceInput() {
@@ -276,9 +277,9 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
 
     @available(iOS 11.0, *)
     public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let data = photo.fileDataRepresentation(), let image = UIImage(data: data) else { return }
-            DispatchQueue.main.async { [weak self] in
+            DispatchQueue.main.async {
                 self?.cameraDelegate?.cameraViewController(captured: image)
             }
         }
@@ -286,8 +287,8 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
 
     public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         if #available(iOS 11.0, *) { } else {
-            DispatchQueue.global(qos: .userInitiated).async {
-                guard let sampleBuffer = photoSampleBuffer, let data = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: sampleBuffer, previewPhotoSampleBuffer: nil), let image = UIImage(data: data) else { return }
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                guard  let self = self, let sampleBuffer = photoSampleBuffer, let data = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: sampleBuffer, previewPhotoSampleBuffer: nil), let image = UIImage(data: data) else { return }
                 DispatchQueue.main.async { [weak self] in
                     self?.cameraDelegate?.cameraViewController(captured: image)
                 }
