@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public protocol CameraViewControllerDelegate: class {
-
+// 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
     func cameraViewController(didFocus point: CGPoint)
     func cameraViewController(update status: AVAuthorizationStatus)
     func cameraViewController(captured image: UIImage)
