@@ -2,4 +2,5 @@ use_frameworks!
 
 target 'SwiftDocumentScanner_Example' do
   pod 'SwiftDocumentScanner', :path => '../'
+  pod 'CropView', :git => 'https://github.com/Weang/CropView.git'
 end

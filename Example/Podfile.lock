@@ -4,20 +4,24 @@ PODS:
     - CropView (= 0.1.6)
 
 DEPENDENCIES:
+  - CropView (from `https://github.com/Weang/CropView.git`)
   - SwiftDocumentScanner (from `../`)
 
-SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - CropView
-
 EXTERNAL SOURCES:
+  CropView:
+    :git: https://github.com/Weang/CropView.git
   SwiftDocumentScanner:
     :path: "../"
 
+CHECKOUT OPTIONS:
+  CropView:
+    :commit: fd4cb4d152abfa0d8c0746cb25300933e982c21d
+    :git: https://github.com/Weang/CropView.git
+
 SPEC CHECKSUMS:
-  CropView: 2fad8340e54f433fd68a112a27007a4be4f580d0
+  CropView: 305bef3d087944d5f48edc3aa9cb946b2c48dbd9
   SwiftDocumentScanner: 038c994209ca6e583884550a654f0f9c500c8d13
 
-PODFILE CHECKSUM: 9b231fa4d40eac987db64f6e849f0e8775a035ba
+PODFILE CHECKSUM: 7a53d264922443ccf3f16e2b3ee3d4f00ac3611c
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.9.3

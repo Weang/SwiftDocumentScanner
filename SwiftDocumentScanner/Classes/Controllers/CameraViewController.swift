@@ -104,10 +104,9 @@ open class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampl
         settings.flashMode = flashMode
         settings.isHighResolutionPhotoEnabled = true
         settings.isAutoStillImageStabilizationEnabled = true
-
-        let previewPixelType = settings.availablePreviewPhotoPixelFormatTypes.first ?? 0
+        
         let previewFormat = [
-            kCVPixelBufferPixelFormatTypeKey as String: previewPixelType,
+            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange),
             kCVPixelBufferWidthKey as String: 160,
             kCVPixelBufferHeightKey as String: 160
         ]

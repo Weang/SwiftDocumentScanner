@@ -172,7 +172,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 5BTSXG27WA;
+						DevelopmentTeam = ULGR8JV88F;
 						LastSwiftMigration = 0900;
 					};
 				};
@@ -182,6 +182,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -235,16 +236,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SwiftDocumentScanner_Example/Pods-SwiftDocumentScanner_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CropView/CropView.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftDocumentScanner/SwiftDocumentScanner.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CropView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftDocumentScanner.framework",
@@ -390,7 +387,7 @@
 			baseConfigurationReference = 17393690A235B5EDE0A5469F /* Pods-SwiftDocumentScanner_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 5BTSXG27WA;
+				DEVELOPMENT_TEAM = ULGR8JV88F;
 				INFOPLIST_FILE = "$(SRCROOT)/SwiftDocumentScanner/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -406,7 +403,7 @@
 			baseConfigurationReference = CF4B6BF51CA10F98D7384049 /* Pods-SwiftDocumentScanner_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 5BTSXG27WA;
+				DEVELOPMENT_TEAM = ULGR8JV88F;
 				INFOPLIST_FILE = "$(SRCROOT)/SwiftDocumentScanner/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
