@@ -17,7 +17,7 @@ class ScannerController: DocumentScannerViewController {
     override func viewDidLoad() {
 		TrackView.fillColor = UIColor.blue.withAlphaComponent(0.4)
 		TrackView.lineColor = UIColor.blue
-
+        
 		tapToFocus = true
 		lowLightBoost = false
 		cameraPosition = .back
